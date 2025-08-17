@@ -1,0 +1,44 @@
+.dialog-container {
+  text-align: center;
+  padding: 2rem;
+  min-width: 300px;
+  border-radius: 15px;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+
+  .icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #4caf50;
+  }
+
+  .message {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #555555;
+  }
+
+  .ok-button {
+    border-radius: 50px;
+    padding: 0.5rem 2rem;
+    font-weight: 600;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

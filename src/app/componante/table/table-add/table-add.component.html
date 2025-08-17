@@ -1,0 +1,131 @@
+<form [formGroup]="form" (ngSubmit)="submitForm()">
+  <!-- Code -->
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Code</mat-label>
+    <input matInput formControlName="code" readonly="" />
+    <mat-error *ngIf="form.get('code')?.hasError('Unique')"
+      >Code must be unique</mat-error
+    >
+  </mat-form-field>
+
+  <!-- NameFl + NameSl -->
+  <div style="display: flex; gap: 10px">
+    <mat-form-field appearance="outline" style="flex: 1">
+      <mat-label>Name in English</mat-label>
+      <input matInput formControlName="nameFl" />
+      <mat-error *ngIf="form.get('nameFl')?.hasError('required')"
+        >Required</mat-error
+      >
+      <mat-error *ngIf="form.get('nameFl')?.hasError('minlength')"
+        >Min 3 letters</mat-error
+      >
+      <mat-error *ngIf="form.get('nameFl')?.hasError('pattern')">
+        Only English letters allowed
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="flex: 1">
+      <mat-label>Name in Arabic</mat-label>
+      <input matInput formControlName="nameSl" />
+      <mat-error *ngIf="form.get('nameSl')?.hasError('required')"
+        >Required</mat-error
+      >
+      <mat-error *ngIf="form.get('nameSl')?.hasError('minlength')"
+        >Min 3 letters</mat-error
+      >
+
+      <mat-error *ngIf="form.get('nameSl')?.hasError('pattern')">
+        Only Arabic letters allowed
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- Tags -->
+  <div class="field">
+    <label>Tags</label>
+    <p-chips
+      formControlName="tags"
+      separator=","
+      placeholder="Add tags"
+      [style]="{ width: '100%' }"
+    >
+    </p-chips>
+    <small
+      *ngIf="form.get('tags')?.invalid && form.get('tags')?.touched"
+      class="p-error"
+    >
+      Tags are required
+    </small>
+  </div>
+
+  
+
+  <!-- Country + City -->
+  <div style="display: flex; gap: 10px;">
+  <mat-form-field appearance="outline" style="flex: 1">
+    <mat-label>Country</mat-label>
+    <mat-select formControlName="country">
+      <mat-option *ngFor="let country of countries" [value]="country.isoCode">
+        {{ country.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="flex: 1">
+    <mat-label>City</mat-label>
+    <mat-select formControlName="city">
+      <mat-option *ngFor="let city of cities" [value]="city">
+        {{ city }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.get('city')?.hasError('required')">
+      City is required
+    </mat-error>
+  </mat-form-field>
+</div>
+
+  <!-- IPv4 Address -->
+  <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 16px">
+    <mat-label>IPv4</mat-label>
+    <input
+      matInput
+      formControlName="ip"
+      placeholder="e.g. 1.1.1.1 (0–255)"
+      inputmode="numeric"
+    />
+
+    <mat-error *ngIf="form.get('ip')?.hasError('required')">
+      IP is required
+    </mat-error>
+    <mat-error *ngIf="form.get('ip')?.hasError('pattern')">
+      Invalid IPv4 address
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Description -->
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+  </mat-form-field>
+
+  <div class="text-center">
+    <button
+      class="mr-2"
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid"
+    >
+      Add
+    </button>
+    <button
+      class="ml-2"
+      mat-raised-button
+      color="warn"
+      type="button"
+      (click)="closeForm()"
+    >
+      close
+    </button>
+  </div>
+</form>

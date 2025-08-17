@@ -1,0 +1,123 @@
+<div
+  class="d-flex justify-content-between align-items-center p-3 mb-5 bg-white shadow-sm rounded-3 border"
+  id="header"
+>
+  <!-- Title -->
+  <div class="d-flex align-items-center">
+    <mat-icon color="primary" class="me-2">description</mat-icon>
+    <h4 class="m-0 fw-bold text-secondary">Documents</h4>
+  </div>
+
+  <!--  buttons -->
+  <div class="d-flex align-items-center gap-2">
+    <button
+      mat-icon-button
+      matTooltip="Refresh"
+      aria-label="Refresh"
+      (click)="onRefresh()"
+    >
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button mat-stroked-button (click)="openSearchDialog()">
+      <mat-icon>search</mat-icon> Search
+    </button>
+    <!-- Export -->
+    <button
+      mat-stroked-button
+      color="primary"
+      class="d-flex align-items-center btn-sm"
+      [matMenuTriggerFor]="menu"
+    >
+      <mat-icon fontSize="small" class="me-1">file_download</mat-icon> Export
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="exportToExcel()">
+        <mat-icon>table_view</mat-icon>
+        <span>Export to Excel</span>
+      </button>
+    </mat-menu>
+
+    <!-- Add button -->
+    <button
+      mat-flat-button
+      color="primary"
+      class="d-flex align-items-center btn-sm"
+      routerLink="/add-table"
+    >
+      <mat-icon fontSize="small" class="me-1">add</mat-icon> Add
+    </button>
+  </div>
+</div>
+
+<table
+  mat-table
+  [dataSource]="filteredData"
+  class="mat-elevation-z8"
+  style="width: 100%"
+>
+  <!-- No. -->
+  <ng-container matColumnDef="No.">
+    <th mat-header-cell *matHeaderCellDef readonly>No.</th>
+    <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+  </ng-container>
+
+  <!-- Code -->
+  <ng-container matColumnDef="code">
+    <th mat-header-cell *matHeaderCellDef readonly>Code</th>
+    <td mat-cell *matCellDef="let element">{{ element.code }}</td>
+  </ng-container>
+
+  <!-- NameFl -->
+  <ng-container matColumnDef="nameFl">
+    <th mat-header-cell *matHeaderCellDef>Name in English</th>
+    <td mat-cell *matCellDef="let element">{{ element.nameFl }}</td>
+  </ng-container>
+
+  <!-- NameSl -->
+  <ng-container matColumnDef="nameSl">
+    <th mat-header-cell *matHeaderCellDef>Name in Arabic</th>
+    <td mat-cell *matCellDef="let element">{{ element.nameSl }}</td>
+  </ng-container>
+
+  <!-- Country -->
+  <ng-container matColumnDef="country">
+    <th mat-header-cell *matHeaderCellDef>Country</th>
+    <td mat-cell *matCellDef="let element">{{ element.country }}</td>
+  </ng-container>
+
+  <!-- City -->
+  <ng-container matColumnDef="city">
+    <th mat-header-cell *matHeaderCellDef>City</th>
+    <td mat-cell *matCellDef="let element">{{ element.city }}</td>
+  </ng-container>
+
+  <!-- Description -->
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef>Description</th>
+    <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+  </ng-container>
+
+  <!-- Actions -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="editUser(element, i)">
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item (click)="deleteUser(i)">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+    </td>
+  </ng-container>
+
+  <!-- Table Header & Rows -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

@@ -1,18 +1,82 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NavbarComponent } from './componante/navbar/navbar.component';
+import { FooterComponent } from './componante/footer/footer.component';
+
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatTableModule} from '@angular/material/table';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import { TableComponent } from './componante/table/table.component';
+import { TableEditComponent } from './componante/table/table-edit/table-edit.component';
+import { TableAddComponent } from './componante/table/table-add/table-add.component';
+
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { IpPipePipe } from './pipe/ip-pipe.pipe';
+import { MatDialogActions } from "@angular/material/dialog";
+import { MatDialogModule , MatDialogRef} from '@angular/material/dialog';
+import { ChipsModule } from 'primeng/chips';
+import { AddDialogComponent } from './componante/table/add-dialog/add-dialog.component';
+import { EditDailogComponent } from './componante/table/edit-dailog/edit-dailog.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { SearchDailogComponent } from './componante/table/search-dailog/search-dailog.component';
+import { MatChip } from "@angular/material/chips";
+
+import { MatChipsModule } from '@angular/material/chips';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NavbarComponent,
+    FooterComponent,
+    TableComponent,
+    TableEditComponent,
+    TableAddComponent,
+    IpPipePipe,
+    AddDialogComponent,
+    EditDailogComponent,
+    SearchDailogComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatSlideToggleModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule,
+    HttpClientModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDialogActions,
+    MatDialogModule,
+    ChipsModule,
+    MatToolbarModule,
+    MatChip,
+    MatChipsModule
+],
+  providers: [
+    provideAnimationsAsync()
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
