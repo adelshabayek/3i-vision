@@ -8,6 +8,7 @@ import { EditDailogComponent } from './edit-dailog/edit-dailog.component';
 import { SearchDailogComponent } from './search-dailog/search-dailog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-table',
@@ -137,13 +138,21 @@ export class TableComponent implements OnInit , AfterViewInit{
 
   // delete
   deleteUser(index: number): void {
-    this.dataSource.splice(index, 1);
-    localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
+  const dialogRef = this.dialog.open(DeleteDialogComponent, {
+    width: '350px',
+    data: { message: 'Are you sure you want to delete this item?' }
+  });
 
-    // update
-   this.filteredData = new MatTableDataSource(this.dataSource);
-    this.filteredData.paginator = this.paginator;
-  }
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.dataSource.splice(index, 1);
+      localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
+
+      this.filteredData = new MatTableDataSource(this.dataSource);
+      this.filteredData.paginator = this.paginator;
+    }
+  });
+}
 
   // add data
   submitForm() {

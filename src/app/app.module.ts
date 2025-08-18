@@ -38,6 +38,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { DeleteDialogComponent } from './components/table/delete-dialog/delete-dialog.component';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { MatSortModule } from '@angular/material/sort';
     AddDialogComponent,
     EditDailogComponent,
     SearchDailogComponent,
+    DeleteDialogComponent,
   ],
   imports: [
     BrowserModule,
