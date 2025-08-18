@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input , ViewChild, AfterViewInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import * as XLSX from 'xlsx';
@@ -6,16 +6,20 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { EditDailogComponent } from './edit-dailog/edit-dailog.component';
 import { SearchDailogComponent } from './search-dailog/search-dailog.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit , AfterViewInit{
   form!: FormGroup;
   searchValue: string = '';
-  filteredData: any[] = [];
+  // filteredData: any[] = [];
+  filteredData: MatTableDataSource<any> = new MatTableDataSource<any>([]);
+
   @Input() dataSource: any[] = []; // data
   editIndex: number | null = null; // to select row to edit
 
@@ -31,6 +35,8 @@ export class TableComponent implements OnInit {
     'actions',
   ];
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -44,15 +50,19 @@ export class TableComponent implements OnInit {
     // });
     const localData = localStorage.getItem('dataSource');
     this.dataSource = localData ? JSON.parse(localData) : [];
-    this.filteredData = [...this.dataSource]; // complete table in first
+    this.filteredData = new MatTableDataSource(this.dataSource);
     this.loadDataFromStorage();
   }
 
+    ngAfterViewInit() {
+    this.filteredData.paginator = this.paginator;
+  }
   // refresh from local storage
   loadDataFromStorage(): void {
     const data = JSON.parse(localStorage.getItem('dataSource') || '[]');
     this.dataSource = Array.isArray(data) ? data : [];
-    this.filteredData = [...this.dataSource];
+    this.filteredData = new MatTableDataSource(this.dataSource);
+    this.filteredData.paginator = this.paginator;
   }
 
   // refresh Button
@@ -69,7 +79,7 @@ export class TableComponent implements OnInit {
       if (result) {
         const { id, name, ip } = result;
 
-        this.filteredData = this.dataSource.filter((item) => {
+        const filtered = this.dataSource.filter((item) => {
           return (
             (!id || item.id === +id) &&
             (!name ||
@@ -77,6 +87,9 @@ export class TableComponent implements OnInit {
             (!ip || item.ip?.includes(ip))
           );
         });
+
+        this.filteredData = new MatTableDataSource(filtered);
+        this.filteredData.paginator = this.paginator;
       }
     });
   }
@@ -85,11 +98,12 @@ export class TableComponent implements OnInit {
   // start filter search
   applyAdvancedFilter(id: number | null, name: string): void {
     if (!id && !name) {
-      this.filteredData = [...this.dataSource];
+      this.filteredData = new MatTableDataSource(this.dataSource);
+      this.filteredData.paginator = this.paginator;
       return;
     }
 
-    this.filteredData = this.dataSource.filter(
+      const filtered = this.dataSource.filter(
       (item) =>
         (id ? item.id === id : true) &&
         (name
@@ -97,6 +111,8 @@ export class TableComponent implements OnInit {
             item.nameSl?.toLowerCase().includes(name.toLowerCase())
           : true)
     );
+    this.filteredData = new MatTableDataSource(filtered);
+    this.filteredData.paginator = this.paginator;
   }
   // end filter search
 
@@ -113,7 +129,8 @@ export class TableComponent implements OnInit {
         localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
 
         // update
-        this.filteredData = [...this.dataSource];
+       this.filteredData = new MatTableDataSource(this.dataSource);
+        this.filteredData.paginator = this.paginator;
       }
     });
   }
@@ -124,7 +141,8 @@ export class TableComponent implements OnInit {
     localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
 
     // update
-    this.filteredData = [...this.dataSource];
+   this.filteredData = new MatTableDataSource(this.dataSource);
+    this.filteredData.paginator = this.paginator;
   }
 
   // add data
@@ -143,6 +161,8 @@ export class TableComponent implements OnInit {
 
       localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
       this.dataSource = [...this.dataSource]; // refresh table
+       this.filteredData = new MatTableDataSource(this.dataSource);
+      this.filteredData.paginator = this.paginator;
 
       // reset form
       this.form.reset({
