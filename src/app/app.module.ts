@@ -5,8 +5,8 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './componante/navbar/navbar.component';
-import { FooterComponent } from './componante/footer/footer.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,9 +15,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-import { TableComponent } from './componante/table/table.component';
-import { TableEditComponent } from './componante/table/table-edit/table-edit.component';
-import { TableAddComponent } from './componante/table/table-add/table-add.component';
+import { TableComponent } from './components/table/table.component';
+import { TableEditComponent } from './components/table/table-edit/table-edit.component';
+import { TableAddComponent } from './components/table/table-add/table-add.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,10 +28,10 @@ import { IpPipePipe } from './pipe/ip-pipe.pipe';
 import { MatDialogActions } from "@angular/material/dialog";
 import { MatDialogModule , MatDialogRef} from '@angular/material/dialog';
 import { ChipsModule } from 'primeng/chips';
-import { AddDialogComponent } from './componante/table/add-dialog/add-dialog.component';
-import { EditDailogComponent } from './componante/table/edit-dailog/edit-dailog.component';
+import { AddDialogComponent } from './components/table/add-dialog/add-dialog.component';
+import { EditDailogComponent } from './components/table/edit-dailog/edit-dailog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { SearchDailogComponent } from './componante/table/search-dailog/search-dailog.component';
+import { SearchDailogComponent } from './components/table/search-dailog/search-dailog.component';
 import { MatChip } from "@angular/material/chips";
 
 import { MatChipsModule } from '@angular/material/chips';
