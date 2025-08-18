@@ -18,6 +18,7 @@ export class TableComponent implements OnInit {
   filteredData: any[] = [];
   @Input() dataSource: any[] = []; // data
   editIndex: number | null = null; // to select row to edit
+
   displayedColumns: string[] = [
     'No.',
     'code',
@@ -59,7 +60,6 @@ export class TableComponent implements OnInit {
     this.loadDataFromStorage();
   }
 
-  // start search
   openSearchDialog(): void {
     const dialogRef = this.dialog.open(SearchDailogComponent, {
       width: '350px',
@@ -72,8 +72,9 @@ export class TableComponent implements OnInit {
         this.filteredData = this.dataSource.filter((item) => {
           return (
             (!id || item.id === +id) &&
-            (!name || item.nameFl.toLowerCase().includes(name.toLowerCase())) &&
-            (!ip || item.ip.includes(ip))
+            (!name ||
+              item.nameFl?.toLowerCase().includes(name.toLowerCase())) &&
+            (!ip || item.ip?.includes(ip))
           );
         });
       }
@@ -82,7 +83,6 @@ export class TableComponent implements OnInit {
   // end search
 
   // start filter search
-
   applyAdvancedFilter(id: number | null, name: string): void {
     if (!id && !name) {
       this.filteredData = [...this.dataSource];
@@ -98,11 +98,9 @@ export class TableComponent implements OnInit {
           : true)
     );
   }
-
   // end filter search
 
   // start edit user
-
   editUser(user: any, index: number) {
     const dialogRef = this.dialog.open(EditDailogComponent, {
       width: '500px',

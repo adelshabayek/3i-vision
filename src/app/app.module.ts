@@ -36,6 +36,8 @@ import { MatChip } from "@angular/material/chips";
 import { MultiSelectModule } from 'primeng/multiselect';
 
 import { MatChipsModule } from '@angular/material/chips';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -72,7 +74,9 @@ import { MatChipsModule } from '@angular/material/chips';
     MatToolbarModule,
     MatChip,
     MatChipsModule,
-    MultiSelectModule
+    MultiSelectModule,
+    MatPaginatorModule,
+    MatSortModule,
 ],
   providers: [
     provideAnimationsAsync()

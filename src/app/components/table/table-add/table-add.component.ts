@@ -27,7 +27,7 @@ export class TableAddComponent implements OnInit {
   countries: any[] = [];
   cities: string[] = [];
   displayedColumns: string[] = [
-    'No.',
+    'no',
     'id',
     'code',
     'nameFl',
@@ -36,6 +36,7 @@ export class TableAddComponent implements OnInit {
     'country',
     'city',
     'description',
+    'actions'
   ];
 showNewTagInput = false;
 newTagName: string = '';
@@ -121,6 +122,9 @@ newTagName: string = '';
       { name: 'Twitter', code: 'Twitter' },
       { name: 'Linkedin', code: 'Linkedin' },
     ];
+
+        this.dataSource = JSON.parse(localStorage.getItem('dataSource') || '[]');
+
   }
 
   checkNewTag(event: any) {
@@ -188,7 +192,7 @@ newTagName: string = '';
       let dataSource = JSON.parse(localStorage.getItem('dataSource') || '[]');
 
       // add element in top
-      dataSource.unshift(newUser); // بدل dataSource.push(newUser)
+      dataSource.unshift(newUser); //  dataSource.push(newUser)
 
       localStorage.setItem('dataSource', JSON.stringify(dataSource));
 

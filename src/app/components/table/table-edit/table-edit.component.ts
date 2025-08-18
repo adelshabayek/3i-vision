@@ -29,7 +29,7 @@ export class TableEditComponent {
     country: [''],
     city: [''],
     description: [''],
-    tags: [[], Validators.required], //  tags required
+    
   });
 
   constructor(
@@ -37,7 +37,7 @@ export class TableEditComponent {
     private dialogRef: MatDialogRef<TableEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.form.patchValue(data); // upload user's data from form
+    this.form.patchValue(data); // upload user's data from form 
   }
 
   onSave() {
