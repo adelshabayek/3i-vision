@@ -3,30 +3,35 @@
   <form [formGroup]="form">
     <mat-form-field class="w-full">
       <mat-label>Code</mat-label>
-      <input matInput formControlName="code" readonly>
+      <input matInput formControlName="code" readonly />
     </mat-form-field>
 
     <div class="grid grid-cols-2 gap-4">
       <mat-form-field>
         <mat-label>Name FL</mat-label>
-        <input matInput formControlName="nameFl">
+        <input matInput formControlName="nameFl" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Name SL</mat-label>
-        <input matInput formControlName="nameSl">
+        <input matInput formControlName="nameSl" />
       </mat-form-field>
     </div>
+
+    <mat-form-field class="w-full">
+      <mat-label>Tags</mat-label>
+      <textarea matInput formControlName="tags"></textarea>
+    </mat-form-field>
 
     <div class="grid grid-cols-2 gap-4">
       <mat-form-field>
         <mat-label>Country</mat-label>
-        <input matInput formControlName="country">
+        <input matInput formControlName="country" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>City</mat-label>
-        <input matInput formControlName="city">
+        <input matInput formControlName="city" />
       </mat-form-field>
     </div>
 

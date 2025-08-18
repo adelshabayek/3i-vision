@@ -18,12 +18,12 @@ export class TableComponent implements OnInit {
   filteredData: any[] = [];
   @Input() dataSource: any[] = []; // data
   editIndex: number | null = null; // to select row to edit
-
   displayedColumns: string[] = [
     'No.',
     'code',
     'nameFl',
     'nameSl',
+    'tags',
     'country',
     'city',
     'description',
@@ -61,19 +61,23 @@ export class TableComponent implements OnInit {
 
   // start search
   openSearchDialog(): void {
-    const dialogRef = this.dialog.open(SearchDailogComponent, { width: '350px' });
+    const dialogRef = this.dialog.open(SearchDailogComponent, {
+      width: '350px',
+    });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      const { id, name, ip } = result;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const { id, name, ip } = result;
 
-      this.filteredData = this.dataSource.filter(item => {
-        return (!id || item.id === +id) &&
-               (!name || item.nameFl.toLowerCase().includes(name.toLowerCase())) &&
-               (!ip || item.ip.includes(ip));
-      });
-    }
-  });
+        this.filteredData = this.dataSource.filter((item) => {
+          return (
+            (!id || item.id === +id) &&
+            (!name || item.nameFl.toLowerCase().includes(name.toLowerCase())) &&
+            (!ip || item.ip.includes(ip))
+          );
+        });
+      }
+    });
   }
   // end search
 
@@ -100,31 +104,30 @@ export class TableComponent implements OnInit {
   // start edit user
 
   editUser(user: any, index: number) {
-  const dialogRef = this.dialog.open(EditDailogComponent, {
-    width: '500px',
-    data: { ...user },
-  });
+    const dialogRef = this.dialog.open(EditDailogComponent, {
+      width: '500px',
+      data: { ...user },
+    });
 
-  dialogRef.afterClosed().subscribe((updated) => {
-    if (updated) {
-      this.dataSource[index] = updated;
-      localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
+    dialogRef.afterClosed().subscribe((updated) => {
+      if (updated) {
+        this.dataSource[index] = updated;
+        localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
 
-      // update
-      this.filteredData = [...this.dataSource];
-    }
-  });
-}
+        // update
+        this.filteredData = [...this.dataSource];
+      }
+    });
+  }
 
-// delete
+  // delete
   deleteUser(index: number): void {
-  this.dataSource.splice(index, 1);
-  localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
+    this.dataSource.splice(index, 1);
+    localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
 
-  // update
-  this.filteredData = [...this.dataSource];
-}
-
+    // update
+    this.filteredData = [...this.dataSource];
+  }
 
   // add data
   submitForm() {
@@ -160,4 +163,3 @@ export class TableComponent implements OnInit {
     XLSX.writeFile(workbook, `Document.xlsx`);
   }
 }
-

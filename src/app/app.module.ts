@@ -33,6 +33,7 @@ import { EditDailogComponent } from './components/table/edit-dailog/edit-dailog.
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SearchDailogComponent } from './components/table/search-dailog/search-dailog.component';
 import { MatChip } from "@angular/material/chips";
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { MatChipsModule } from '@angular/material/chips';
 
@@ -70,7 +71,8 @@ import { MatChipsModule } from '@angular/material/chips';
     ChipsModule,
     MatToolbarModule,
     MatChip,
-    MatChipsModule
+    MatChipsModule,
+    MultiSelectModule
 ],
   providers: [
     provideAnimationsAsync()

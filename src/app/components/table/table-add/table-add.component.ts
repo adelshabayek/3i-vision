@@ -11,7 +11,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 import { HttpClient } from '@angular/common/http';
-
+import { Media } from '../../../modules/media';
 @Component({
   selector: 'app-table-add',
   templateUrl: './table-add.component.html',
@@ -19,12 +19,13 @@ import { HttpClient } from '@angular/common/http';
 })
 export class TableAddComponent implements OnInit {
   form: FormGroup;
+  media!: Media[];
+  selectedMedia!: Media[];
   dataSource: any[] = [];
   userTags: string[] = [];
   existingCodes = [''];
   countries: any[] = [];
   cities: string[] = [];
-
   displayedColumns: string[] = [
     'No.',
     'id',
@@ -36,6 +37,8 @@ export class TableAddComponent implements OnInit {
     'city',
     'description',
   ];
+showNewTagInput = false;
+newTagName: string = '';
 
   constructor(
     private router: Router,
@@ -45,7 +48,7 @@ export class TableAddComponent implements OnInit {
     private dialog: MatDialog
   ) {
     this.form = this.fb.group({
-      id: [{ value: null, disabled: true }], // 🟢 id داخل الفورم
+      id: [{ value: null, disabled: true }], //  id
 
       code: [
         {
@@ -58,7 +61,7 @@ export class TableAddComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(3),
-          Validators.pattern(/^[A-Za-z\s]+$/), // يسمح فقط بحروف إنجليزية ومسافات
+          Validators.pattern(/^[A-Za-z\s]+$/), // En and space
         ],
       ],
       nameSl: [
@@ -66,7 +69,7 @@ export class TableAddComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(3),
-          Validators.pattern(/^[\u0621-\u064A\s]+$/), // يسمح فقط بالحروف العربية والمسافات
+          Validators.pattern(/^[\u0621-\u064A\s]+$/), // Ar and space
         ],
       ],
       country: [''],
@@ -81,7 +84,7 @@ export class TableAddComponent implements OnInit {
           ),
         ],
       ],
-      tags: [[], Validators.required],
+      tags: [[], Validators.required],  //  tags required
     });
 
     this.form.get('country')?.valueChanges.subscribe((country) => {
@@ -98,34 +101,52 @@ export class TableAddComponent implements OnInit {
   ngOnInit(): void {
     this.loadCountries();
 
-  // تغيير validators حسب اختيار country
-  this.form.get('country')?.valueChanges.subscribe((countryCode) => {
-    const cityControl = this.form.get('city');
-    if (countryCode) {
-      cityControl?.setValidators([Validators.required]);
-      this.loadCities(countryCode); // تحميل المدن عند اختيار الدولة
-    } else {
-      cityControl?.clearValidators();
-      this.cities = [];
-    }
-    cityControl?.updateValueAndValidity();
-  });
+    //  validators  country
+    this.form.get('country')?.valueChanges.subscribe((countryCode) => {
+      const cityControl = this.form.get('city');
+      if (countryCode) {
+        cityControl?.setValidators([Validators.required]);
+        this.loadCities(countryCode); // load city when select country
+      } else {
+        cityControl?.clearValidators();
+        this.cities = [];
+      }
+      cityControl?.updateValueAndValidity();
+    });
+
+    this.media = [
+      { name: 'Facebook', code: 'Facebook' },
+      { name: 'Youtube', code: 'Youtube' },
+      { name: 'Instagram', code: 'Instagram' },
+      { name: 'Twitter', code: 'Twitter' },
+      { name: 'Linkedin', code: 'Linkedin' },
+    ];
   }
 
+  checkNewTag(event: any) {
+  if (event.value.includes('new')) {
+    this.showNewTagInput = true;
+  } else {
+    this.showNewTagInput = false;
+  }
+}
+
+
+
   loadCountries() {
-  this.countries = Country.getAllCountries();
-}
+    this.countries = Country.getAllCountries();
+  }
 
-loadCities(countryCode: string) {
-  this.cities = [];
-  const states = State.getStatesOfCountry(countryCode);
-  states.forEach((state) => {
-    const stateCities = City.getCitiesOfState(countryCode, state.isoCode);
-    this.cities.push(...stateCities.map((c) => c.name));
-  });
-}
+  loadCities(countryCode: string) {
+    this.cities = [];
+    const states = State.getStatesOfCountry(countryCode);
+    states.forEach((state) => {
+      const stateCities = City.getCitiesOfState(countryCode, state.isoCode);
+      this.cities.push(...stateCities.map((c) => c.name));
+    });
+  }
 
-  // ✅ function to generate unique ID
+  // function to generate unique ID
   private generateId(): number {
     let lastId = Number(localStorage.getItem('lastId') || '0');
     lastId++;
@@ -144,25 +165,25 @@ loadCities(countryCode: string) {
     if (this.form.valid) {
       const newUser = this.form.getRawValue();
 
-      // ✅ لو مفيش id، أنشئ واحد جديد (لكن لو موجود ما نغيّروش)
+      // ###
       if (!newUser.id) {
         newUser.id = this.generateId();
       }
 
-    // Country فارغ
-    if (!newUser.country) {
-      newUser.country = '###';
-    }
+      // Country
+      if (!newUser.country) {
+        newUser.country = '###';
+      }
 
-    // City فارغ
-    if (!newUser.city) {
-      newUser.city = '###';
-    }
+      // City
+      if (!newUser.city) {
+        newUser.city = '###';
+      }
 
-    // Description فارغ
-    if (!newUser.description) {
-      newUser.description = '###';
-    }
+      // Description
+      if (!newUser.description) {
+        newUser.description = '###';
+      }
 
       let dataSource = JSON.parse(localStorage.getItem('dataSource') || '[]');
 
