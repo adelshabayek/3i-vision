@@ -62,3 +62,31 @@ button {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
+
+::ng-deep .p-chips {
+  width: 100%;
+  min-height: 56px; // نفس ارتفاع mat-form-field
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: -17px;
+
+  .p-inputtext {
+    padding: 12px 8px !important; // نفس padding الحقول
+    font-size: 17px;
+    border: 1px solid #888; // يخلي outline يسيطر على الشكل
+  }
+
+  .p-chips-token {
+    background: #e3f2fd;
+    color: #1565c0;
+    border-radius: 16px;
+    padding: 4px 10px;
+    font-size: 13px;
+    margin: 2px 4px;
+  }
+
+  .p-chips-token .p-chips-token-icon {
+    font-size: 12px;
+  }
+}

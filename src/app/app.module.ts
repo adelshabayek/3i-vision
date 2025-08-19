@@ -38,6 +38,7 @@ import { DeleteDialogComponent } from './components/table/delete-dialog/delete-d
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SearchLocalDailogComponent } from './components/table/search-view-dailog/search-local-dailog.component';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { SearchLocalDailogComponent } from './components/table/search-view-dailo
     MatSortModule,
     MatRadioModule,
     MatButtonToggleModule,
+    FloatLabelModule
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],

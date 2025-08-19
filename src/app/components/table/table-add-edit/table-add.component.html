@@ -42,21 +42,26 @@
   </div>
 
   <!-- Tags -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Tags</mat-label>
-    <mat-select formControlName="tags" multiple required>
-      <mat-option *ngFor="let tag of media" [value]="tag.code">{{
-        tag.name
-      }}</mat-option>
-    </mat-select>
-    <mat-error
-      *ngIf="
-        form.get('tags')?.hasError('required') && form.get('tags')?.touched
-      "
-    >
-      At least one tag is required
+  <div class="p-fluid">
+    <p-floatLabel>
+      <p-chips
+        id="chips"
+        formControlName="tags"
+        separator=","
+        [addOnBlur]="false"
+        (onAdd)="onTagAdd($event)"
+        placeholder="Type D:\ and press Enter"
+
+      ></p-chips>
+      <label for="chips" class="">Tags*</label>
+    </p-floatLabel>
+    <!-- required error -->
+    <mat-error *ngIf="form.get('tags')?.hasError('required')"></mat-error>
+    <!-- regex error -->
+    <mat-error *ngIf="form.get('tags')?.hasError('mustStartWithD')">
+      Each tag must start with <strong>D:\</strong>
     </mat-error>
-  </mat-form-field>
+  </div>
 
   <!-- Country + City -->
   <div class="row-fields">

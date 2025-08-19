@@ -1,17 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Country, State, City } from 'country-state-city';
-
 import {
   FormBuilder,
   FormGroup,
   Validators,
   AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 import { HttpClient } from '@angular/common/http';
-import { Media } from '../../../modules/media';
+
 @Component({
   selector: 'app-table-add',
   templateUrl: './table-add.component.html',
@@ -19,8 +19,6 @@ import { Media } from '../../../modules/media';
 })
 export class TableAddComponent implements OnInit {
   form: FormGroup;
-  media!: Media[];
-  selectedMedia!: Media[];
   dataSource: any[] = [];
   userTags: string[] = [];
   existingCodes = [''];
@@ -32,6 +30,7 @@ export class TableAddComponent implements OnInit {
   idParam: string | null = null;
   isEditMode = false;
   ////////
+  separator?: string | RegExp;
   displayedColumns: string[] = [
     'no',
     'id',
@@ -88,7 +87,7 @@ export class TableAddComponent implements OnInit {
           ),
         ],
       ],
-      tags: [[], Validators.required], //  tags required
+      tags: [[], [Validators.required, this.mustStartWithDriveD]],
     });
 
     this.form.get('country')?.valueChanges.subscribe((country) => {
@@ -117,14 +116,6 @@ export class TableAddComponent implements OnInit {
       cityControl?.updateValueAndValidity();
     });
 
-    this.media = [
-      { name: 'Facebook', code: 'Facebook' },
-      { name: 'Youtube', code: 'Youtube' },
-      { name: 'Instagram', code: 'Instagram' },
-      { name: 'Twitter', code: 'Twitter' },
-      { name: 'Linkedin', code: 'Linkedin' },
-    ];
-
     // load data
     this.dataSource = JSON.parse(localStorage.getItem('dataSource') || '[]');
     //  grap id in paramiter
@@ -135,11 +126,22 @@ export class TableAddComponent implements OnInit {
     }
   }
 
-  checkNewTag(event: any) {
-    if (event.value.includes('new')) {
-      this.showNewTagInput = true;
-    } else {
-      this.showNewTagInput = false;
+  // must value be D:\ tags
+  mustStartWithDriveD(control: AbstractControl): ValidationErrors | null {
+    const tags: string[] = control.value || [];
+    if (!tags.length) return null;
+
+    const invalid = tags.some((tag) => !/^D:\\/.test(tag));
+    return invalid ? { mustStartWithD: true } : null;
+  }
+  onTagAdd(event: any): void {
+    const value = event.value;
+
+    // if user not write D:\ => remove value he writes
+    if (!/^D:\\/.test(value)) {
+      const tags = this.form.get('tags')?.value || [];
+      tags.pop();
+      this.form.get('tags')?.setValue(tags);
     }
   }
 
