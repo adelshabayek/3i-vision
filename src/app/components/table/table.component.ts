@@ -1,13 +1,19 @@
-import { Component, OnInit, Input , ViewChild, AfterViewInit} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import * as XLSX from 'xlsx';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { EditDailogComponent } from './edit-dailog/edit-dailog.component';
-import { SearchDailogComponent } from './search-dailog/search-dailog.component';
+import { SearchDailogComponent } from './search-all-dailog/search-dailog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { SearchLocalDailogComponent } from './search-view-dailog/search-local-dailog.component';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @Component({
@@ -15,14 +21,14 @@ import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
-export class TableComponent implements OnInit , AfterViewInit{
+export class TableComponent implements OnInit, AfterViewInit {
   form!: FormGroup;
   searchValue: string = '';
-  // filteredData: any[] = [];
+  allData: any[] = []; // copy data from local storage
   filteredData: MatTableDataSource<any> = new MatTableDataSource<any>([]);
-
   @Input() dataSource: any[] = []; // data
   editIndex: number | null = null; // to select row to edit
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   displayedColumns: string[] = [
     'No.',
@@ -36,8 +42,6 @@ export class TableComponent implements OnInit , AfterViewInit{
     'actions',
   ];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -48,50 +52,104 @@ export class TableComponent implements OnInit , AfterViewInit{
   ngOnInit(): void {
     // this.http.get<any[]>('assets/data/data.json').subscribe(data => {
     //   this.dataSource = data;
-    // });
+    // });   ........    I used old file here    .........
+
     const localData = localStorage.getItem('dataSource');
     this.dataSource = localData ? JSON.parse(localData) : [];
     this.filteredData = new MatTableDataSource(this.dataSource);
     this.loadDataFromStorage();
   }
 
-    ngAfterViewInit() {
+  ngAfterViewInit() {
     this.filteredData.paginator = this.paginator;
   }
+
   // refresh from local storage
   loadDataFromStorage(): void {
     const data = JSON.parse(localStorage.getItem('dataSource') || '[]');
-    this.dataSource = Array.isArray(data) ? data : [];
-    this.filteredData = new MatTableDataSource(this.dataSource);
-    this.filteredData.paginator = this.paginator;
+    this.allData = Array.isArray(data) ? data : [];
+    // update datasource
+    this.dataSource = [...this.allData];
+    this.filteredData.data = [...this.allData];
+    if (this.paginator) this.filteredData.paginator = this.paginator;
+  }
+
+  // search from local view
+  openSearchLocalDialog(): void {
+    const dialogRef = this.dialog.open(SearchLocalDailogComponent, {
+      width: '380px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+
+      const { code = '', name = '', mode = 'OR' } = result; //  default OR
+      const No = this.paginator?.pageSize ?? 5;
+      const base = this.allData.slice(0, No);
+
+      const norm = (v: any) =>
+        String(v ?? '')
+          .toLowerCase()
+          .trim();
+      const qCode = norm(code);
+      const qName = norm(name);
+
+      const filtered = base.filter((item: any) => {
+        const matchCode = !qCode || norm(item.code).includes(qCode);
+        const matchName =
+          !qName ||
+          norm(item.nameFl).includes(qName) ||
+          norm(item.nameSl).includes(qName);
+
+        return mode === 'OR' ? matchCode && matchName : matchCode || matchName;
+      });
+
+      this.filteredData.data = filtered;
+      if (this.paginator) this.paginator.firstPage();
+    });
   }
 
   // refresh Button
   onRefresh(): void {
     this.loadDataFromStorage();
+    if (this.paginator) this.paginator.firstPage();
   }
 
-  openSearchDialog(): void {
+  // search from all localstorage
+  openSearchAllDialog(): void {
     const dialogRef = this.dialog.open(SearchDailogComponent, {
-      width: '350px',
+      width: '380px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const { id, name, ip } = result;
+      if (!result) return;
 
-        const filtered = this.dataSource.filter((item) => {
-          return (
-            (!id || item.id === +id) &&
-            (!name ||
-              item.nameFl?.toLowerCase().includes(name.toLowerCase())) &&
-            (!ip || item.ip?.includes(ip))
-          );
-        });
+      const { code = '', name = '', ip = '', mode = 'OR' } = result; // ✅ default OR
 
-        this.filteredData = new MatTableDataSource(filtered);
-        this.filteredData.paginator = this.paginator;
-      }
+      const norm = (v: any) =>
+        String(v ?? '')
+          .toLowerCase()
+          .trim();
+      const qCode = norm(code);
+      const qName = norm(name);
+      const qIp = norm(ip);
+
+      const filtered = this.allData.filter((item: any) => {
+        const matchCode = !qCode || norm(item.code).includes(qCode);
+        const matchName =
+          !qName ||
+          norm(item.nameFl).includes(qName) ||
+          norm(item.nameSl).includes(qName);
+        const matchIp = !qIp || norm(item.ip).includes(qIp);
+
+        // ✅ نطبق mode
+        return mode === 'OR'
+          ? matchCode && matchName && matchIp
+          : matchCode || matchName || matchIp;
+      });
+
+      this.filteredData.data = filtered;
+      if (this.paginator) this.paginator.firstPage();
     });
   }
   // end search
@@ -104,7 +162,7 @@ export class TableComponent implements OnInit , AfterViewInit{
       return;
     }
 
-      const filtered = this.dataSource.filter(
+    const filtered = this.dataSource.filter(
       (item) =>
         (id ? item.id === id : true) &&
         (name
@@ -118,43 +176,38 @@ export class TableComponent implements OnInit , AfterViewInit{
   // end filter search
 
   // start edit user
-  editUser(user: any, index: number) {
-    const dialogRef = this.dialog.open(EditDailogComponent, {
-      width: '500px',
-      data: { ...user },
+  editUser(user: any) {
+    // with id
+    this.router.navigate(['/edit-table', user.id]);
+
+    // with code
+    // this.router.navigate(['/edit-table', user.code]);
+  }
+
+  // delete row
+  deleteUser(index: number): void {
+    const item = this.filteredData.data[index];
+    if (!item) return;
+
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      width: '350px',
+      data: { message: `Are you sure to delete "${item.nameFl}" ?` },
     });
 
-    dialogRef.afterClosed().subscribe((updated) => {
-      if (updated) {
-        this.dataSource[index] = updated;
-        localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
-
-        // update
-       this.filteredData = new MatTableDataSource(this.dataSource);
-        this.filteredData.paginator = this.paginator;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const id = item.id;
+        const idx = this.allData.findIndex((x) => String(x.id) === String(id));
+        if (idx > -1) {
+          this.allData.splice(idx, 1);
+          localStorage.setItem('dataSource', JSON.stringify(this.allData));
+          this.loadDataFromStorage();
+        }
       }
     });
   }
 
-  // delete
-  deleteUser(index: number): void {
-  const dialogRef = this.dialog.open(DeleteDialogComponent, {
-    width: '350px',
-    data: { message: 'Are you sure you want to delete this item?' }
-  });
-
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      this.dataSource.splice(index, 1);
-      localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
-
-      this.filteredData = new MatTableDataSource(this.dataSource);
-      this.filteredData.paginator = this.paginator;
-    }
-  });
-}
-
-  // add data
+  // add row
   submitForm() {
     if (this.form.valid) {
       const newData = this.form.getRawValue();
@@ -170,12 +223,12 @@ export class TableComponent implements OnInit , AfterViewInit{
 
       localStorage.setItem('dataSource', JSON.stringify(this.dataSource));
       this.dataSource = [...this.dataSource]; // refresh table
-       this.filteredData = new MatTableDataSource(this.dataSource);
+      this.filteredData = new MatTableDataSource(this.dataSource);
       this.filteredData.paginator = this.paginator;
 
       // reset form
       this.form.reset({
-        code: 'Id-' + Math.floor(1000 + Math.random() * 9000),
+        code: 'USR-' + Math.floor(1000 + Math.random() * 9000),
       });
     } else {
       this.form.markAllAsTouched();

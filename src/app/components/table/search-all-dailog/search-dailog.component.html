@@ -1,0 +1,32 @@
+<!-- src/app/components/table/search-dailog/search-dailog.component.html -->
+<form [formGroup]="form" (ngSubmit)="onSearch()">
+  <mat-dialog-content>
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Code</mat-label>
+      <input matInput formControlName="code" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>IP</mat-label>
+      <input matInput formControlName="ip" />
+    </mat-form-field>
+
+    <div class="mt-2">
+      <label>Mode:</label>
+      <mat-radio-group formControlName="mode">
+        <mat-radio-button value="AND">AND</mat-radio-button>
+        <mat-radio-button value="OR" class="ms-2">OR</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary" type="submit">Search</button>
+  </mat-dialog-actions>
+</form>

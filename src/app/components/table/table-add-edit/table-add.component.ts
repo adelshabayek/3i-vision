@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Country, State, City } from 'country-state-city';
 
 import {
@@ -26,6 +26,12 @@ export class TableAddComponent implements OnInit {
   existingCodes = [''];
   countries: any[] = [];
   cities: string[] = [];
+  showNewTagInput = false;
+  newTagName: string = '';
+  // Edit mood
+  idParam: string | null = null;
+  isEditMode = false;
+  ////////
   displayedColumns: string[] = [
     'no',
     'id',
@@ -36,21 +42,18 @@ export class TableAddComponent implements OnInit {
     'country',
     'city',
     'description',
-    'actions'
+    'actions',
   ];
-showNewTagInput = false;
-newTagName: string = '';
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private http: HttpClient,
-
     private fb: FormBuilder,
     private dialog: MatDialog
   ) {
     this.form = this.fb.group({
       id: [{ value: null, disabled: true }], //  id
-
       code: [
         {
           value: 'USR-' + Math.floor(1000 + Math.random() * 9000),
@@ -85,7 +88,7 @@ newTagName: string = '';
           ),
         ],
       ],
-      tags: [[], Validators.required],  //  tags required
+      tags: [[], Validators.required], //  tags required
     });
 
     this.form.get('country')?.valueChanges.subscribe((country) => {
@@ -101,13 +104,12 @@ newTagName: string = '';
 
   ngOnInit(): void {
     this.loadCountries();
-
     //  validators  country
-    this.form.get('country')?.valueChanges.subscribe((countryCode) => {
+    this.form.get('country')?.valueChanges.subscribe((countryName) => {
       const cityControl = this.form.get('city');
-      if (countryCode) {
+      if (countryName) {
         cityControl?.setValidators([Validators.required]);
-        this.loadCities(countryCode); // load city when select country
+        this.loadCities(countryName); // load city when select country
       } else {
         cityControl?.clearValidators();
         this.cities = [];
@@ -123,19 +125,23 @@ newTagName: string = '';
       { name: 'Linkedin', code: 'Linkedin' },
     ];
 
-        this.dataSource = JSON.parse(localStorage.getItem('dataSource') || '[]');
-
+    // load data
+    this.dataSource = JSON.parse(localStorage.getItem('dataSource') || '[]');
+    //  grap id in paramiter
+    this.idParam = this.route.snapshot.paramMap.get('id');
+    if (this.idParam) {
+      this.isEditMode = true;
+      this.loadDataForEdit(this.idParam);
+    }
   }
 
   checkNewTag(event: any) {
-  if (event.value.includes('new')) {
-    this.showNewTagInput = true;
-  } else {
-    this.showNewTagInput = false;
+    if (event.value.includes('new')) {
+      this.showNewTagInput = true;
+    } else {
+      this.showNewTagInput = false;
+    }
   }
-}
-
-
 
   loadCountries() {
     this.countries = Country.getAllCountries();
@@ -165,49 +171,73 @@ newTagName: string = '';
     return null;
   }
 
+  private loadDataForEdit(idParam: string) {
+    const item = this.dataSource.find(
+      (x: any) => String(x.id) === String(idParam)
+    );
+    if (!item) return;
+
+    // select city if country selected
+    if (item.country) {
+      this.loadCities(item.country);
+    }
+
+    this.form.patchValue(item);
+  }
+
+  // ————— Actions —————
   submitForm() {
-    if (this.form.valid) {
-      const newUser = this.form.getRawValue();
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-      // ###
-      if (!newUser.id) {
-        newUser.id = this.generateId();
+    const formValue = this.form.getRawValue();
+
+    // change code to name
+    if (formValue.country) {
+      const countryObj = this.countries.find(
+        (c) => c.isoCode === formValue.country
+      );
+      if (countryObj) {
+        formValue.country = countryObj.name; // name only
       }
+    }
 
-      // Country
-      if (!newUser.country) {
-        newUser.country = '###';
+    // complete inputs
+    if (!formValue.country) formValue.country = '- - - -';
+    if (!formValue.city) formValue.city = '- - - -';
+    if (!formValue.description) formValue.description = '- - - -';
+
+    let data = JSON.parse(localStorage.getItem('dataSource') || '[]');
+
+    if (this.isEditMode && this.idParam) {
+      // update
+      const index = data.findIndex(
+        (x: any) => String(x.id) === String(this.idParam)
+      );
+      if (index > -1) {
+        data[index] = { ...data[index], ...formValue }; // save inputs
       }
-
-      // City
-      if (!newUser.city) {
-        newUser.city = '###';
+    } else {
+      // add
+      if (!formValue.id) {
+        formValue.id = this.generateId();
       }
+      data.unshift(formValue);
+    }
 
-      // Description
-      if (!newUser.description) {
-        newUser.description = '###';
-      }
+    localStorage.setItem('dataSource', JSON.stringify(data));
+    this.dataSource = [...data];
 
-      let dataSource = JSON.parse(localStorage.getItem('dataSource') || '[]');
+    // if success
+    this.dialog.open(AddDialogComponent, { width: '350px' });
 
-      // add element in top
-      dataSource.unshift(newUser); //  dataSource.push(newUser)
-
-      localStorage.setItem('dataSource', JSON.stringify(dataSource));
-
-      // rafresh table
-      this.dataSource = [...dataSource];
-
-      // open dailog
-      this.dialog.open(AddDialogComponent, { width: '350px' });
-
-      // reset form
+    // when add make Reset
+    if (!this.isEditMode) {
       this.form.reset({
         code: 'USR-' + Math.floor(1000 + Math.random() * 9000),
       });
-    } else {
-      this.form.markAllAsTouched();
     }
 
     this.router.navigate(['/']); // back table

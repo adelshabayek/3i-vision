@@ -12,34 +12,32 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatTableModule} from '@angular/material/table';
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { TableComponent } from './components/table/table.component';
-import { TableEditComponent } from './components/table/table-edit/table-edit.component';
-import { TableAddComponent } from './components/table/table-add/table-add.component';
+import { TableAddComponent } from './components/table/table-add-edit/table-add.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { IpPipePipe } from './pipe/ip-pipe.pipe';
-import { MatDialogActions } from "@angular/material/dialog";
-import { MatDialogModule , MatDialogRef} from '@angular/material/dialog';
+import { MatDialogActions } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ChipsModule } from 'primeng/chips';
 import { AddDialogComponent } from './components/table/add-dialog/add-dialog.component';
-import { EditDailogComponent } from './components/table/edit-dailog/edit-dailog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { SearchDailogComponent } from './components/table/search-dailog/search-dailog.component';
-import { MatChip } from "@angular/material/chips";
+import { SearchDailogComponent } from './components/table/search-all-dailog/search-dailog.component';
+import { MatChip } from '@angular/material/chips';
 import { MultiSelectModule } from 'primeng/multiselect';
-
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { DeleteDialogComponent } from './components/table/delete-dialog/delete-dialog.component';
-
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { SearchLocalDailogComponent } from './components/table/search-view-dailog/search-local-dailog.component';
 
 @NgModule({
   declarations: [
@@ -47,13 +45,11 @@ import { DeleteDialogComponent } from './components/table/delete-dialog/delete-d
     NavbarComponent,
     FooterComponent,
     TableComponent,
-    TableEditComponent,
     TableAddComponent,
-    IpPipePipe,
     AddDialogComponent,
-    EditDailogComponent,
     SearchDailogComponent,
     DeleteDialogComponent,
+    SearchLocalDailogComponent
   ],
   imports: [
     BrowserModule,
@@ -79,12 +75,10 @@ import { DeleteDialogComponent } from './components/table/delete-dialog/delete-d
     MultiSelectModule,
     MatPaginatorModule,
     MatSortModule,
-],
-  providers: [
-    provideAnimationsAsync()
+    MatRadioModule,
+    MatButtonToggleModule,
   ],
-  bootstrap: [AppComponent]
+  providers: [provideAnimationsAsync()],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
-
-
+export class AppModule {}

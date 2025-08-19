@@ -10,9 +10,19 @@
 
   <!-- Buttons -->
   <div class="d-flex align-items-center gap-2">
+    <!-- Search Button -->
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="openSearchLocalDialog()"
+    >
+      <mat-icon>search</mat-icon> View
+    </button>
+
     <!-- Refresh -->
     <button
       mat-icon-button
+      color="primary"
       matTooltip="Refresh"
       aria-label="Refresh"
       (click)="onRefresh()"
@@ -20,9 +30,9 @@
       <mat-icon>refresh</mat-icon>
     </button>
 
-    <!-- Search -->
-    <button mat-stroked-button (click)="openSearchDialog()">
-      <mat-icon>search</mat-icon> Search
+    <!-- Search Button -->
+    <button mat-stroked-button color="primary" (click)="openSearchAllDialog()">
+      <mat-icon>search</mat-icon> All
     </button>
 
     <!-- Export -->
@@ -124,13 +134,13 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="editUser(element, i)">
+          <button mat-menu-item (click)="editUser(element)">
             <mat-icon>edit</mat-icon>
             <span>Edit</span>
           </button>
           <button mat-menu-item (click)="deleteUser(i)">
             <mat-icon>delete</mat-icon>
-            <span> Delete</span>
+            <span>Delete</span>
           </button>
         </mat-menu>
       </td>
@@ -142,8 +152,10 @@
   </table>
 </div>
 
-
+<!-- // paginator -->
 <mat-paginator
   [pageSizeOptions]="[5, 10, 20]"
-  showFirstLastButtons>
+  showFirstLastButtons
+  class="pt-4"
+>
 </mat-paginator>

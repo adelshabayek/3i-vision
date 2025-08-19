@@ -1,0 +1,81 @@
+
+.dialog-container {
+  padding: 20px;
+  animation: fadeInScale 0.3s ease;
+
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    .warn-icon {
+      font-size: 36px;
+      color: #e53935;
+      margin-right: 10px;
+    }
+  }
+
+  .dialog-content {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 20px;
+
+    p {
+      margin: 0;
+      line-height: 1.6;
+    }
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    button {
+      border-radius: 8px !important;
+      font-weight: 500;
+
+      mat-icon {
+        margin-right: 6px;
+      }
+    }
+
+    .mat-stroked-button {
+      border-color: #1976d2 !important;
+      color: #1976d2 !important;
+    }
+
+    .mat-flat-button {
+      background-color: #e53935 !important;
+      color: white !important;
+
+      &:hover {
+        background-color: #c62828 !important;
+      }
+    }
+  }
+}
+
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+::ng-deep .mat-mdc-dialog-surface {
+  border-radius: 16px !important;
+  overflow: hidden;
+}

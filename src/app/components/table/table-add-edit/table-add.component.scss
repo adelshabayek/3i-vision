@@ -42,3 +42,23 @@ button {
   padding: 8px 20px !important;
   font-weight: 600;
 }
+
+
+.form-actions-modern {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.form-actions-modern button {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 6px 16px;
+  transition: all 0.3s ease;
+}
+
+.form-actions-modern button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
