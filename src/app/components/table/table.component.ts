@@ -124,7 +124,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (!result) return;
 
-      const { code = '', name = '', ip = '', mode = 'OR' } = result; // ✅ default OR
+      const { code = '', name = '', ip = '', mode = 'OR' } = result; //  default OR
 
       const norm = (v: any) =>
         String(v ?? '')
@@ -142,7 +142,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           norm(item.nameSl).includes(qName);
         const matchIp = !qIp || norm(item.ip).includes(qIp);
 
-        // ✅ نطبق mode
+        // 
         return mode === 'OR'
           ? matchCode && matchName && matchIp
           : matchCode || matchName || matchIp;
