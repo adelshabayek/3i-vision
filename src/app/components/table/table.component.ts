@@ -15,6 +15,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SearchLocalDailogComponent } from './search-view-dailog/search-local-dailog.component';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-table',
@@ -29,6 +30,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() dataSource: any[] = []; // data
   editIndex: number | null = null; // to select row to edit
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = [
     'No.',
@@ -62,6 +64,8 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.filteredData.paginator = this.paginator;
+        this.filteredData.sort = this.sort;
+
   }
 
   // refresh from local storage

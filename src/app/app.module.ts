@@ -33,12 +33,13 @@ import { MatChip } from '@angular/material/chips';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
+import { MatSortModule , MatSort} from '@angular/material/sort';
 import { DeleteDialogComponent } from './components/table/delete-dialog/delete-dialog.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SearchLocalDailogComponent } from './components/table/search-view-dailog/search-local-dailog.component';
 import { FloatLabelModule } from 'primeng/floatlabel';
+
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     MatSortModule,
     MatRadioModule,
     MatButtonToggleModule,
-    FloatLabelModule
+    FloatLabelModule,
+    MatSort
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],

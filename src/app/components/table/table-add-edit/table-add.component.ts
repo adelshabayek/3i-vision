@@ -87,7 +87,7 @@ export class TableAddComponent implements OnInit {
           ),
         ],
       ],
-      tags: [[], [Validators.required, this.mustStartWithDriveD]],
+      tags: [[], [Validators.required, this.mustStartWithDriveLetter]],
     });
 
     this.form.get('country')?.valueChanges.subscribe((country) => {
@@ -126,24 +126,25 @@ export class TableAddComponent implements OnInit {
     }
   }
 
-  // must value be D:\ tags
-  mustStartWithDriveD(control: AbstractControl): ValidationErrors | null {
-    const tags: string[] = control.value || [];
-    if (!tags.length) return null;
+  // must value be [A-Z]:\ tags
+mustStartWithDriveLetter(control: AbstractControl): ValidationErrors | null {
+  const tags: string[] = control.value || [];
+  if (!tags.length) return null;
 
-    const invalid = tags.some((tag) => !/^D:\\/.test(tag));
-    return invalid ? { mustStartWithD: true } : null;
-  }
-  onTagAdd(event: any): void {
-    const value = event.value;
+  const invalid = tags.some((tag) => !/^[A-Z]:\\/.test(tag));
+  return invalid ? { mustStartWithDriveLetter: true } : null;
+}
 
-    // if user not write D:\ => remove value he writes
-    if (!/^D:\\/.test(value)) {
-      const tags = this.form.get('tags')?.value || [];
-      tags.pop();
-      this.form.get('tags')?.setValue(tags);
-    }
+onTagAdd(event: any): void {
+  const value = event.value;
+
+  // if user not write [A-Z]:\ => remove value he writes
+  if (!/^[A-Z]:\\/.test(value)) {
+    const tags = this.form.get('tags')?.value || [];
+    tags.pop();
+    this.form.get('tags')?.setValue(tags);
   }
+}
 
   loadCountries() {
     this.countries = Country.getAllCountries();
